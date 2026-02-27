@@ -11,8 +11,9 @@ export default defineSchema({
   }),
   users:defineTable({
     id:v.string(),
+    username:v.string(),
     email:v.optional(v.string()),
     url:v.optional(v.string())
 
-  }).index("by_email",["email"])
+  }).index("by_username",["username"]).searchIndex("search_username",{searchField:"username"})
 });

@@ -4,6 +4,7 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { PanelLeftIcon } from "lucide-react"
 import { Slot } from "radix-ui"
+import { RippleButton } from "@/components/ui/ripple-button"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -24,6 +25,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useState } from "react"
+import { useMutation, useQuery } from "convex/react"
+import { api } from "@/convex/_generated/api"
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -322,13 +326,36 @@ function SidebarInput({
   className,
   ...props
 }: React.ComponentProps<typeof Input>) {
+  let [text,setText]=useState<string>("");
+  let find=useQuery(api.user.getUser,{user:text})
+  console.log(find)
+
+  
   return (
+  <>
     <Input
       data-slot="sidebar-input"
       data-sidebar="input"
       className={cn("bg-background h-8 w-full shadow-none", className)}
       {...props}
-    />
+    onChange={(e)=>{
+      
+      setText(e.target.value)
+    }}/>
+    { find?.length!=0 &&
+       find?.map((el,index)=>{
+        return (
+          <RippleButton className={"w-[80%]"} rippleColor="#ADD8E6" id={index.toString()}>{el.username}</RippleButton> 
+        )
+       })
+       
+
+    }
+    {find?.length==0 && text.length!=0 &&
+    <p>No User Found</p>
+
+    }
+  </>
   )
 }
 
