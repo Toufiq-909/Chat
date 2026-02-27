@@ -23,7 +23,7 @@ import { Switch } from "@/components/ui/switch"
 const data = {
   navMain: [
    {
-      title: "Messages",
+      title: "Chats",
       url: "#",
       icon: Send,
       isActive: true,

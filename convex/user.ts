@@ -32,7 +32,7 @@ export const getUser=query({args:{user:v.string()},handler:async(ctx,args)=>{
         let filteredusers=searchedUsers.filter(element=>element.username!=validuser.nickname)
         let result=filteredusers.map((x)=>{
             return (
-                {username:x.username}
+                {username:x.username,img:x.url}
             )
         })
         return result;

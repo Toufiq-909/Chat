@@ -9,7 +9,6 @@
  */
 
 import type * as middleware from "../middleware.js";
-import type * as myFunctions from "../myFunctions.js";
 import type * as user from "../user.js";
 
 import type {
@@ -20,7 +19,6 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   middleware: typeof middleware;
-  myFunctions: typeof myFunctions;
   user: typeof user;
 }>;
 

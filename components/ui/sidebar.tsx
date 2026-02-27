@@ -4,7 +4,7 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { PanelLeftIcon } from "lucide-react"
 import { Slot } from "radix-ui"
-import { RippleButton } from "@/components/ui/ripple-button"
+import { AvatarCircles } from "@/components/ui/avatar-circles"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -177,8 +177,10 @@ function Sidebar({
           "bg-sidebar text-sidebar-foreground flex h-full w-(--sidebar-width) flex-col",
           className
         )}
+        
         {...props}
       >
+        
         {children}
       </div>
     )
@@ -186,6 +188,7 @@ function Sidebar({
 
   if (isMobile) {
     return (
+      <>
       <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
         <SheetContent
           data-sidebar="sidebar"
@@ -203,9 +206,15 @@ function Sidebar({
             <SheetTitle>Sidebar</SheetTitle>
             <SheetDescription>Displays the mobile sidebar.</SheetDescription>
           </SheetHeader>
-          <div className="flex h-full w-full flex-col">{children}</div>
+          
+          <div className="flex  h-full w-full flex-col">{children}</div>
+         
         </SheetContent>
+        
       </Sheet>
+      
+      </>
+
     )
   }
 
@@ -340,19 +349,37 @@ function SidebarInput({
       {...props}
     onChange={(e)=>{
       
+      
+      
       setText(e.target.value)
     }}/>
     { find?.length!=0 &&
        find?.map((el,index)=>{
         return (
-          <RippleButton className={"w-[80%]"} rippleColor="#ADD8E6" id={index.toString()}>{el.username}</RippleButton> 
+          <div tabIndex={0} className={"flex  rounded-md focus:outline-4 focus:outline-grey-600 dark:focus:outline-neutral-600"}>
+
+            <AvatarCircles className={"mr-4 "}
+  numPeople={0}
+  avatarUrls={[
+    {
+      imageUrl: el.img,
+      profileUrl: "",
+    },
+  ]}
+/>
+
+          
+          <button
+       id={index.toString()}>{el.username}
+        </button> 
+        </div>
         )
        })
        
-
+//card
     }
     {find?.length==0 && text.length!=0 &&
-    <p>No User Found</p>
+    <p>No User Found!</p>
 
     }
   </>
