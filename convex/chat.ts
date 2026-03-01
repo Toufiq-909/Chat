@@ -1,7 +1,7 @@
 import { v } from "convex/values"
 import { mutation, query } from "./_generated/server"
 import { Id } from "./_generated/dataModel";
-export const createChat=mutation({args:{participants:v.array(v.string())},handler:async(ctx,args)=>{
+export const createChat=mutation({args:{participants:(v.string())},handler:async(ctx,args)=>{
 
     let user=await ctx.auth.getUserIdentity();
     if(user)
@@ -41,11 +41,14 @@ export const createMessage=mutation({args:{chatid:v.string(),msg:v.string(),send
          let user=await ctx.auth.getUserIdentity();
     if(user)
     {
-        console.log("hi")
+       if(args.chatid.length>0)
+       {
+         console.log("hi")
         console.log(args)
          let message={msgId:crypto.randomUUID(),msg:args.msg,sender:args.sender,timestamp:Date.now().toString()}
          const oldmessage=await ctx.db.get(args.chatid as Id<"chats">)
          await ctx.db.patch("chats",args.chatid as Id<"chats">,{messages:[...(oldmessage?.messages??[]),message]})
+       }
         
     }
     else
@@ -76,4 +79,23 @@ export const getMessage=query({args:{chatid:(v.string())},handler:async(ctx,args
     }
 
     
+}})
+
+
+export const getChats=query({args:{username:v.string()},handler:async(ctx,args)=>{
+    let user=await ctx.auth.getUserIdentity();
+    if(user)
+    {
+        console.log("HI i got called" +args.username)
+        let results=await ctx.db.query("chats")
+        .withSearchIndex("search_participants",(q)=>q.search("participants",args?.username))
+        .collect();
+        console.log(results);
+        return results
+
+    }
+    else
+    {
+        throw new Error("unauthorized user")
+    }
 }})

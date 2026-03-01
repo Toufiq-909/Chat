@@ -23,8 +23,9 @@ export default  function Chat()
         let Add=async ()=>{
            
     
-        let participants=[String(userdetails.user?.username??""),String(selectedUser.username??"")
-        ].sort()
+        let participants=String(userdetails.user?.username??"")+String(selectedUser.username??"")
+        
+        
         let response=await createConnection({participants})
        
         console.log("asdf"+response)

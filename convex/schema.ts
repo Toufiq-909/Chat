@@ -15,9 +15,10 @@ export default defineSchema({
 
   }).index("by_username",["username"]).searchIndex("search_username",{searchField:"username"}),
   chats:defineTable({
-    participants:v.array(v.string()),
+    participants:v.string(),
     messages:v.array(v.object({msgId:(v.string()),msg:v.string(),sender:(v.string()),timestamp:(v.string())}))
   }).index("by_participants",["participants"])
+  .searchIndex("search_participants",{searchField:"participants"})
 });
 
 
