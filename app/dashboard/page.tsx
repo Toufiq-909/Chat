@@ -21,7 +21,8 @@ import { useMutation } from "convex/react"
 import { useEffect,useState } from "react";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 import { Send, Trash2 } from "lucide-react";
-
+import { useChatStore } from "@/stores/chatstore";
+import Chat from "@/components/chat";
 const data = {
   navMain: [
    {
@@ -131,6 +132,7 @@ const data = {
 export default function DashBoard() {
   let addUser=useMutation(api.user.createUser)
   const [mails, setMails] = useState(data.mails)
+  let selecteduser=useChatStore((state)=>state.selectedUser)
   useEffect(()=>{
     addUser()
   },[])
@@ -172,6 +174,13 @@ export default function DashBoard() {
           </div>
         </div>
         <div className="flex flex-1 flex-col gap-4 p-4">
+{
+  selecteduser.username.length>0 &&
+ <div>
+   <button className={"btn"}>asdf</button>
+  <Chat/>
+  </div>
+}
           {Array.from({ length: 24 }).map((_, index) => (
             <div
               key={index}
@@ -190,9 +199,7 @@ export default function DashBoard() {
           />
           <Breadcrumb>
             <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-               
-              </BreadcrumbItem>
+             
           
               <BreadcrumbItem>
                 <BreadcrumbPage>Messages</BreadcrumbPage>

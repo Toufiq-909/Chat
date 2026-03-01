@@ -6,20 +6,18 @@ import { v } from "convex/values";
 // app will continue to work.
 // The schema provides more precise TypeScript types.
 export default defineSchema({
-  numbers: defineTable({
-    value: v.number(),
-  }),
+  
   users:defineTable({
     id:v.string(),
     username:v.string(),
-    email:v.optional(v.string()),
-    url:v.optional(v.string())
+    email:(v.string()),
+    url:(v.string())
 
   }).index("by_username",["username"]).searchIndex("search_username",{searchField:"username"}),
   chats:defineTable({
     participants:v.array(v.string()),
-    messages:v.array(v.object({msg:v.string(),sender:v.string(),timestamp:v.string()}))
-  })
+    messages:v.array(v.object({msgId:(v.string()),msg:v.string(),sender:(v.string()),timestamp:(v.string())}))
+  }).index("by_participants",["participants"])
 });
 
 

@@ -26,8 +26,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useState } from "react"
-import { useMutation, useQuery } from "convex/react"
+import {  useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
+import { useChatStore } from "@/stores/chatstore"
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -335,6 +336,7 @@ function SidebarInput({
   className,
   ...props
 }: React.ComponentProps<typeof Input>) {
+  let setSelectedUser=useChatStore((state)=>state.setSelectedUser)
   let [text,setText]=useState<string>("");
   let find=useQuery(api.user.getUser,{user:text})
   console.log(find)
@@ -356,7 +358,11 @@ function SidebarInput({
     { find?.length!=0 &&
        find?.map((el,index)=>{
         return (
-          <div tabIndex={0} className={"flex  rounded-md focus:outline-4 focus:outline-grey-600 dark:focus:outline-neutral-600"}>
+          <div tabIndex={0} className={"flex  rounded-md focus:outline-4 focus:outline-grey-600 dark:focus:outline-neutral-600"}
+          onClick={()=>{
+            setSelectedUser({username:el.username,img:el.img,chatid:""
+            })
+          }}>
 
             <AvatarCircles className={"mr-4 "}
   numPeople={0}

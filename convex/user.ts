@@ -13,7 +13,7 @@ if(user)
     if(!check.length)
     {
          
-        await ctx.db.insert("users",{id:user.tokenIdentifier,username:String(user.nickname ?? ""),email:user.email,url:user.pictureUrl 
+        await ctx.db.insert("users",{id:user.tokenIdentifier,username:String(user.nickname ?? ""),email:String(user.email ?? ""),url:String(user.pictureUrl ?? "")
     })
     }
 
