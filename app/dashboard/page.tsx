@@ -17,23 +17,27 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { api } from "@/convex/_generated/api"
-import { useMutation } from "convex/react"
+import { useMutation, useQuery } from "convex/react"
 import { useEffect,useState } from "react";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 import { Send, Trash2 } from "lucide-react";
 import { useChatStore } from "@/stores/chatstore";
-import Chat from "@/components/chat";
+import Chat from "@/app/chat/page";
+import { AvatarCircles } from "@/components/ui/avatar-circles";
+import { useUser } from "@clerk/clerk-react";
+import { useRouter } from "next/navigation"
+import { useIsMobile } from "@/hooks/use-mobile"
 const data = {
   navMain: [
    {
       title: "Chats",
-      url: "#",
+      url: "",
       icon: Send,
       isActive: true,
     },
     {
       title: "Drafts",
-      url: "#",
+      url: "",
       icon: File,
       isActive: false,
     },
@@ -41,102 +45,32 @@ const data = {
     
     {
       title: "Trash",
-      url: "#",
+      url: "",
       icon: Trash2,
       isActive: false,
     },
   ],
-  mails: [
-    {
-      name: "William Smith",
-      email: "williamsmith@example.com",
-      subject: "Meeting Tomorrow",
-      date: "09:34 AM",
-      teaser:
-        "Hi team, just a reminder about our meeting tomorrow at 10 AM.\nPlease come prepared with your project updates.",
-    },
-    {
-      name: "Alice Smith",
-      email: "alicesmith@example.com",
-      subject: "Re: Project Update",
-      date: "Yesterday",
-      teaser:
-        "Thanks for the update. The progress looks great so far.\nLet's schedule a call to discuss the next steps.",
-    },
-    {
-      name: "Bob Johnson",
-      email: "bobjohnson@example.com",
-      subject: "Weekend Plans",
-      date: "2 days ago",
-      teaser:
-        "Hey everyone! I'm thinking of organizing a team outing this weekend.\nWould you be interested in a hiking trip or a beach day?",
-    },
-    {
-      name: "Emily Davis",
-      email: "emilydavis@example.com",
-      subject: "Re: Question about Budget",
-      date: "2 days ago",
-      teaser:
-        "I've reviewed the budget numbers you sent over.\nCan we set up a quick call to discuss some potential adjustments?",
-    },
-    {
-      name: "Michael Wilson",
-      email: "michaelwilson@example.com",
-      subject: "Important Announcement",
-      date: "1 week ago",
-      teaser:
-        "Please join us for an all-hands meeting this Friday at 3 PM.\nWe have some exciting news to share about the company's future.",
-    },
-    {
-      name: "Sarah Brown",
-      email: "sarahbrown@example.com",
-      subject: "Re: Feedback on Proposal",
-      date: "1 week ago",
-      teaser:
-        "Thank you for sending over the proposal. I've reviewed it and have some thoughts.\nCould we schedule a meeting to discuss my feedback in detail?",
-    },
-    {
-      name: "David Lee",
-      email: "davidlee@example.com",
-      subject: "New Project Idea",
-      date: "1 week ago",
-      teaser:
-        "I've been brainstorming and came up with an interesting project concept.\nDo you have time this week to discuss its potential impact and feasibility?",
-    },
-    {
-      name: "Olivia Wilson",
-      email: "oliviawilson@example.com",
-      subject: "Vacation Plans",
-      date: "1 week ago",
-      teaser:
-        "Just a heads up that I'll be taking a two-week vacation next month.\nI'll make sure all my projects are up to date before I leave.",
-    },
-    {
-      name: "James Martin",
-      email: "jamesmartin@example.com",
-      subject: "Re: Conference Registration",
-      date: "1 week ago",
-      teaser:
-        "I've completed the registration for the upcoming tech conference.\nLet me know if you need any additional information from my end.",
-    },
-    {
-      name: "Sophia White",
-      email: "sophiawhite@example.com",
-      subject: "Team Dinner",
-      date: "1 week ago",
-      teaser:
-        "To celebrate our recent project success, I'd like to organize a team dinner.\nAre you available next Friday evening? Please let me know your preferences.",
-    },
-  ],
+  
 }
 export default function DashBoard() {
+  let user=useUser()
+  const router = useRouter();
+  let mobile=useIsMobile();
   let addUser=useMutation(api.user.createUser)
-  const [mails, setMails] = useState(data.mails)
+ let setSelectedUser=useChatStore((state)=>state.setSelectedUser)
   let selecteduser=useChatStore((state)=>state.selectedUser)
+  let chats=useQuery(api.chat.getChats,{username:String(user.user?.username??"")})
   useEffect(()=>{
     addUser()
   },[])
 
+  useEffect(()=>{
+    if(selecteduser.username.length>0 && mobile)
+    {
+      router.push("/chat")
+    }
+
+  },[selecteduser])
   return (
     <SidebarProvider
       style={
@@ -212,29 +146,61 @@ export default function DashBoard() {
             <AnimatedThemeToggler />
           </div>
         </div>
-        <p>sdfasdf</p>
-        <SidebarInput placeholder="Type to search..." />
+        
+        <SidebarInput  className={"mt-4 ml-4 flex justify-center w-[80%]"} placeholder="Type to search..." />
  <SidebarContent>
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
-              {mails.map((mail) => (
-                <a
-                  href="#"
-                  key={mail.email}
-                  className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight whitespace-nowrap last:border-b-0"
-                >
-                  <div className="flex w-full items-center gap-2">
-                    <span>{mail.name}</span>{" "}
-                    <span className="ml-auto text-xs">{mail.date}</span>
-                  </div>
-                  <span className="font-medium">{mail.subject}</span>
-                  <span className="line-clamp-2 w-[260px] text-xs whitespace-break-spaces">
-                    {mail.teaser}
-                  </span>
-                </a>
-              ))}
-            </SidebarGroupContent>
+                        {chats?.map((el) => {
+           
+                                     let time=new Date(parseInt(el.msg?.timestamp)).toLocaleString("en-IN",{dateStyle:"short",timeStyle:"short"})
+                                     if(time=="Invalid Date")
+                                     {
+                                       time=""
+                                     }
+           
+           
+           return (
+             <div tabIndex={0} className={"flex items-center m-1 cursor-pointer rounded-sm bg-red900 h-[70px] mt-4 focus:bg-neutral-200 dark:focus:bg-neutral-800  hover:bg-neutral-200 dark:hover:bg-neutral-800"}
+                                            onClick={()=>{
+                                              setSelectedUser({username:el.name,img:el.img??"",chatid:el.chatid??""
+                                              })
+                                            }}>
+                                  
+                                              <AvatarCircles className={"mr-4 ml-2 "}
+                                    numPeople={0}
+                                    avatarUrls={[
+                                      {
+                                        imageUrl: el.img??"",
+                                        profileUrl: "",
+                                      },
+                                    ]}
+                                  />
+                                  
+                                            <div className={"bg-red900 w-[100%]"}>
+                     
+                                                 <div className={"flex bg-red900 justify-between w-[100%]"}>
+                                           <p>{el.name}</p>
+                                           <p className={"mr-4"}>{time}</p>
+                                          </div>
+                                          
+                                          <p>{el.msg?.msg}</p>
+                     
+                                            </div>
+                                      
+                                          </div>
+           )
+           
+           
+           
+           
+           
+                                   }
+                                  
+                                   )}
+                       </SidebarGroupContent>
           </SidebarGroup>
+     
         </SidebarContent>
       </div>
         

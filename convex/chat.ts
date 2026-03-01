@@ -84,15 +84,50 @@ export const getMessage=query({args:{chatid:(v.string())},handler:async(ctx,args
 
 export const getChats=query({args:{username:v.string()},handler:async(ctx,args)=>{
     let user=await ctx.auth.getUserIdentity();
+      
+    let getImg=async (username:string)=>{
+         let result=await ctx.db.query("users")
+        .withIndex("by_username",q=>q.eq("username",username)).first()
+        return  result?.url
+
+
+        }
     if(user)
     {
         console.log("HI i got called" +args.username)
         let results=await ctx.db.query("chats")
         .withSearchIndex("search_participants",(q)=>q.search("participants",args?.username))
         .collect();
-        console.log(results);
-        return results
+     
+        let filteredresult=await Promise.all(results.map(async(el)=>{
 
+            let users=el.participants.split(",");
+            let anotheruser="";
+            if(users[0]==args.username)
+            {
+                anotheruser=users[1]
+            }
+            else
+            {
+                anotheruser=users[0]
+            }
+            return(
+                {
+                    msg:el.messages[el.messages.length-1],
+                    chatid:el._id,
+                    img:await getImg(anotheruser),
+                    name:anotheruser
+                    
+
+
+                }
+            )
+        }))
+        console.log(filteredresult)
+        return filteredresult;
+
+     
+        
     }
     else
     {

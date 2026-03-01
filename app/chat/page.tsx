@@ -1,3 +1,4 @@
+"use client"
 import { api } from "@/convex/_generated/api";
 import { useChatStore } from "@/stores/chatstore";
 import { useUser } from "@clerk/clerk-react";
@@ -8,6 +9,7 @@ import { Id } from "@/convex/_generated/dataModel";
 type conversation={name:string,msg:string,timestamp:string[],img:string}
 export default  function Chat()
 {
+  
      let createConnection=useMutation(api.chat.createChat)
      let sendMessage=useMutation(api.chat.createMessage)
      
@@ -23,9 +25,9 @@ export default  function Chat()
         let Add=async ()=>{
            
     
-        let participants=String(userdetails.user?.username??"")+String(selectedUser.username??"")
-        
-        
+        let participants=[String(userdetails.user?.username??""),String(selectedUser.username??"")].sort().join(",")
+        console.log(participants)
+
         let response=await createConnection({participants})
        
         console.log("asdf"+response)

@@ -43,3 +43,4 @@ export const getUser=query({args:{user:v.string()},handler:async(ctx,args)=>{
         throw new Error("Not Authenticated")
     }
 }})
+
