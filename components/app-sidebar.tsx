@@ -156,7 +156,7 @@ return (
                                    })
                                  }}>
                        
-                                   <AvatarCircles className={"mr-4 ml-2 "}
+                                   <AvatarCircles className={"mr-4 ml-2 w-[65px] "}
                          numPeople={0}
                          avatarUrls={[
                            {

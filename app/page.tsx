@@ -6,7 +6,7 @@ import {
 import NavBar from "@/components/resizable-navbar"
 import World from "@/components/world-map-demo";
 import DashBoard from "./dashboard/page";
-import {create} from "zustand"
+import Promo from "@/components/promo";
 export default function Home() {
 
 
@@ -18,6 +18,7 @@ export default function Home() {
         <Unauthenticated>  
           <NavBar/>
           <World/>
+          <Promo/>
         </Unauthenticated>
       
     </>

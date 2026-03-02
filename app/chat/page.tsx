@@ -46,7 +46,7 @@ export default  function Chat()
     }
         ,[])
     return(
-        <div>
+        <div className={""}>
             {
                 messages?.length==0 ?
                 <div>

@@ -1,11 +1,11 @@
 import { motion } from "motion/react";
 import WorldMap from "./ui/world-map";
-import NoiseBackgroundDemo from "./noise-background-demo";
+
  export default function World() {
   return (
-    <div className=" py-15 md:py-4 dark:bg-black bg-white w-full">
+    <div className="py-4 dark:bg-black bg-white w-full">
       <div className="max-w-7xl mx-auto text-center">
-        <p className="font-bold text-xl md:text-4xl dark:text-white text-black">
+        <p className="font-bold font-[Inter]  text-2xl md:text-4xl dark:text-white text-black">
           Remote{" "}
           <span className="text-neutral-400">
             {"Connectivity".split("").map((word, idx) => (
@@ -21,10 +21,10 @@ import NoiseBackgroundDemo from "./noise-background-demo";
             ))}
           </span>
         </p>
-        <p className="text-sm md:text-lg text-neutral-500 max-w-2xl mx-auto py-4">
+        <p className="text-sm font-[Inter] font-semibold md:text-lg text-neutral-500 max-w-2xl mx-auto py-4">
         Leave old-school messaging behind.
 Connect instantly from wherever you are  your home, a café, or across continents.
-Designed for modern nomads and explorers.
+Designed for modern nomads.
         </p>
       </div>
       <WorldMap
@@ -74,7 +74,7 @@ Designed for modern nomads and explorers.
         ]}
       />
     
-        <NoiseBackgroundDemo/>
+      
      
     </div>
   );

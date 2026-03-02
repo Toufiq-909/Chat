@@ -29,6 +29,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+
+      <head>
+          <link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cookie&family=Geist+Mono:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet"/>
+ 
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

@@ -111,7 +111,7 @@ export default function DashBoard() {
 {
   selecteduser.username.length>0 &&
  <div>
-   <button className={"btn"}>asdf</button>
+   
   <Chat/>
   </div>
 }
@@ -147,7 +147,7 @@ export default function DashBoard() {
           </div>
         </div>
         
-        <SidebarInput  className={"mt-4 ml-4 flex justify-center w-[80%]"} placeholder="Type to search..." />
+        <SidebarInput  className={"mt-4 ml-4  flex justify-center w-[80%]"} placeholder="Type to search..." />
  <SidebarContent>
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
@@ -167,12 +167,12 @@ export default function DashBoard() {
                                               })
                                             }}>
                                   
-                                              <AvatarCircles className={"mr-4 ml-2 "}
+                                              <AvatarCircles className={"mr-4 ml-2"}
                                     numPeople={0}
                                     avatarUrls={[
                                       {
                                         imageUrl: el.img??"",
-                                        profileUrl: "",
+                                        profileUrl: "rtyu",
                                       },
                                     ]}
                                   />

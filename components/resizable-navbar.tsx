@@ -16,7 +16,7 @@ import { SignUpButton } from "@clerk/nextjs";
 import { SignInButton } from "@clerk/nextjs";
 export default function NavBar() {
   const navItems: any[] = [
-    {name:""}
+    {name:"Where Conversations Come Alive.Experience seamless real-time communication."}
 
   ];
 
@@ -28,13 +28,13 @@ export default function NavBar() {
         {/* Desktop Navigation */}
         <NavBody>
           <NavbarLogo />
-          <NavItems items={navItems} />
+          <NavItems className=" bg-red900" items={navItems} />
           <div className="flex items-center gap-4">
             <SignInButton>
-            <NavbarButton variant="secondary" >Login</NavbarButton>
+            <NavbarButton variant="secondary" className="text-lg" >login</NavbarButton>
             </SignInButton>
             <SignUpButton>
-            <NavbarButton variant="primary">Sign Up</NavbarButton>
+            <NavbarButton className="text-sm" variant="primary">Sign Up</NavbarButton>
             </SignUpButton>
           </div>
         </NavBody>
@@ -68,7 +68,7 @@ export default function NavBar() {
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
-                className="w-full"
+                className="w-full font-[Inter] font-bold "
               >
                 Login
               </NavbarButton>
@@ -77,7 +77,7 @@ export default function NavBar() {
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
-                className="w-full"
+                className="w-full font-[Inter] font-bold"
               >
                 Sign Up
               </NavbarButton>
