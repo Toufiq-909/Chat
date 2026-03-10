@@ -98,8 +98,11 @@ export const getChats=query({args:{username:v.string()},handler:async(ctx,args)=
         let results=await ctx.db.query("chats")
         .withSearchIndex("search_participants",(q)=>q.search("participants",args?.username))
         .collect();
+
+
+        let onlyuserchats=results.filter(el=>el.participants.split(",").includes(args.username))
      
-        let filteredresult=await Promise.all(results.map(async(el)=>{
+        let filteredresult=await Promise.all(onlyuserchats.map(async(el)=>{
 
             let users=el.participants.split(",");
             let anotheruser="";

@@ -16,7 +16,7 @@ import { SignUpButton } from "@clerk/nextjs";
 import { SignInButton } from "@clerk/nextjs";
 export default function NavBar() {
   const navItems: any[] = [
-    {name:"Where Conversations Come Alive.Experience seamless real-time communication."}
+    {name:"Experience seamless real-time communication."}
 
   ];
 
