@@ -358,7 +358,7 @@ function SidebarInput({
     { find?.length!=0 &&
        find?.map((el,index)=>{
         return (
-          <div tabIndex={0} className={"flex items-center h-[60px] cursor-pointer  rounded-md hover:outline-2 hover:bg-neutral-200 dark:hover:bg-neutral-600"}
+          <div tabIndex={0} className={"flex items-center h-[60px] cursor-pointer  rounded-md hover:outline-2 hover:bg-neutral-200 dark:hover:bg-neutral-800"}
           onClick={()=>{
             setSelectedUser({username:el.username,img:el.img,chatid:""
             })
