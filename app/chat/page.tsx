@@ -2,11 +2,11 @@
 import { api } from "@/convex/_generated/api";
 import { useChatStore } from "@/stores/chatstore";
 import { useUser } from "@clerk/clerk-react";
-import { useMutation, useQueries, useQuery } from "convex/react";
+import { useMutation, useAction, useQuery } from "convex/react";
 import { useEffect, useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 
-type conversation={name:string,msg:string,timestamp:string[],img:string}
+type conversation={name:string,msg:string,timestamp:string[],img:string,ai:string}
 export default  function Chat()
 {
   
@@ -73,8 +73,8 @@ export default  function Chat()
                           return(
                             <div>
                               {el.sender==userdetails.user?.username ?
-                              <Sender name={el.sender} msg={el.msg} timestamp={new Date(parseInt(el.timestamp)).toLocaleString('en-IN',{timeStyle:"short"}).split(",")} img={userdetails.user.imageUrl}/>
-                              :<Reciever name={el.sender} msg={el.msg} timestamp={new Date(parseInt(el.timestamp)).toLocaleString('en-IN',{timeStyle:"short"}).split(",")} img={selectedUser.img}/>
+                              <Sender ai={el.ai??""} name={el.sender} msg={el.msg} timestamp={new Date(parseInt(el.timestamp)).toLocaleString('en-IN',{timeStyle:"short"}).split(",")} img={userdetails.user.imageUrl}/>
+                              :<Reciever ai={el.ai??""} name={el.sender} msg={el.msg} timestamp={new Date(parseInt(el.timestamp)).toLocaleString('en-IN',{timeStyle:"short"}).split(",")} img={selectedUser.img}/>
                               }
                              
                               </div>
@@ -103,7 +103,7 @@ export default  function Chat()
 }
 
 
-function Reciever({name,msg,timestamp,img}:conversation)
+function Reciever({ai,name,msg,timestamp,img}:conversation)
 {
   let date=new Date().toLocaleString("en-In").split(",")
   if(date[0]==timestamp[0])
@@ -133,8 +133,18 @@ function Reciever({name,msg,timestamp,img}:conversation)
     )
 }
 
-function Sender({name,msg,timestamp,img}:conversation)
+function Sender({ai,name,msg,timestamp,img}:conversation)
 {
+
+
+
+const answerMatch = ai?.match(/Answer:\s*(\w+)/);
+const confidenceMatch = ai?.match(/Confidence:\s*([\d.]+)/);
+
+const answer = answerMatch ? answerMatch[1] : null;
+const confidence = confidenceMatch ? parseFloat(confidenceMatch[1]) : null;
+
+
   let date=new Date().toLocaleString("en-In").split(",")
   if(date[0]==timestamp[0])
   {
@@ -142,7 +152,8 @@ function Sender({name,msg,timestamp,img}:conversation)
   }
     return (
         
-            <div className="chat chat-end">
+     <div>
+             <div className="chat chat-end">
   <div className="chat-image avatar">
     <div className="w-10 rounded-full">
       <img
@@ -157,7 +168,18 @@ function Sender({name,msg,timestamp,img}:conversation)
   </div>
   <div className="chat-bubble">{msg}</div>
   <div className="chat-footer opacity-50">{timestamp}</div>
+  
+
 </div>
+{
+   answer && confidence && confidence>0.69 && confidence<0.80 &&
+   <p className={"text-blue-500 text-lg font-bold text-center "}>{"This message might be AI generated"}</p>
+}
+{
+  answer && confidence && confidence>=0.8 &&
+   <p className={"text-red-600 text-lg font-bold text-center "}>{"This message is AI generated"}</p>
+}
+     </div>
       
     )
 }

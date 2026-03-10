@@ -1,6 +1,7 @@
 import { v } from "convex/values"
-import { mutation, query } from "./_generated/server"
+import { mutation, query, action } from "./_generated/server"
 import { Id } from "./_generated/dataModel";
+import { api } from "./_generated/api";
 export const createChat=mutation({args:{participants:(v.string())},handler:async(ctx,args)=>{
 
     let user=await ctx.auth.getUserIdentity();
@@ -44,10 +45,14 @@ export const createMessage=mutation({args:{chatid:v.string(),msg:v.string(),send
        if(args.chatid.length>0)
        {
          console.log("hi")
-        console.log(args)
-         let message={msgId:crypto.randomUUID(),msg:args.msg,sender:args.sender,timestamp:Date.now().toString()}
+        const msgId:string=crypto.randomUUID()
+         let message={msgId:msgId,msg:args.msg,sender:args.sender,timestamp:Date.now().toString(),ai:""}
          const oldmessage=await ctx.db.get(args.chatid as Id<"chats">)
          await ctx.db.patch("chats",args.chatid as Id<"chats">,{messages:[...(oldmessage?.messages??[]),message]})
+         if(args.msg.length>60)
+         {
+            await ctx.scheduler.runAfter(0,api.TextVerification.verifyText,{msg:args.msg,chatid:args.chatid,msgId:msgId})
+         }
        }
         
     }
@@ -136,4 +141,24 @@ export const getChats=query({args:{username:v.string()},handler:async(ctx,args)=
     {
         throw new Error("unauthorized user")
     }
+}})
+
+export const updateMsgAi=mutation({args:{chatid:v.string(),msgid:v.string(),result:v.string()},
+handler:async(ctx,args)=>{
+
+    const chat = await ctx.db.get(args.chatid as Id<"chats">)
+    const updatedMessageAiStatus=chat?.messages.map((el)=>{
+        if(el.msgId==args.msgid)
+        {
+            el.ai=args.result
+            return el
+
+        }
+        else
+        {
+            return el
+        }
+    })
+    await ctx.db.patch(args.chatid as Id<"chats">,{messages:updatedMessageAiStatus})
+
 }})

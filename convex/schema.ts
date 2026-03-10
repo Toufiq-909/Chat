@@ -11,13 +11,15 @@ export default defineSchema({
     id:v.string(),
     username:v.string(),
     email:(v.string()),
-    url:(v.string())
+    url:(v.string()),
+    
 
   }).index("by_username",["username"]).searchIndex("search_username",{searchField:"username"}),
   chats:defineTable({
     participants:v.string(),
-    messages:v.array(v.object({msgId:(v.string()),msg:v.string(),sender:(v.string()),timestamp:(v.string())}))
+    messages:v.array(v.object({msgId:(v.string()),msg:v.string(),sender:(v.string()),ai:v.optional(v.string()) ,timestamp:(v.string())}))
   }).index("by_participants",["participants"])
+
   .searchIndex("search_participants",{searchField:"participants"})
 });
 
